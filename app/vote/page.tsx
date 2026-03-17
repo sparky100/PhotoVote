@@ -4,7 +4,7 @@ import { supabase } from '../../lib/supabase'
 import { Photo } from '../../lib/types'
 import styles from './vote.module.css'
 
-const VOTED_KEY = 'photo_vote_cast'
+const VOTED_KEY = 'photo_vote_poll_id'
 
 export default function VotePage() {
   const [photos, setPhotos] = useState<Photo[]>([])
@@ -14,16 +14,20 @@ export default function VotePage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setHasVoted(!!localStorage.getItem(VOTED_KEY))
-    fetchPhotos()
+    fetchPollAndPhotos()
   }, [])
 
-  async function fetchPhotos() {
-    const { data } = await supabase
-      .from('photos')
-      .select('*')
-      .order('created_at', { ascending: true })
-    setPhotos(data || [])
+  async function fetchPollAndPhotos() {
+    // Fetch current poll ID and photos in parallel
+    const [pollRes, photosRes] = await Promise.all([
+      supabase.from('settings').select('value').eq('key', 'poll_id').single(),
+      supabase.from('photos').select('*').order('sort_order', { ascending: true })
+    ])
+    const currentPollId = pollRes.data?.value
+    const storedPollId = localStorage.getItem(VOTED_KEY)
+    // Only consider voted if poll ID matches
+    setHasVoted(!!currentPollId && storedPollId === currentPollId)
+    setPhotos(photosRes.data || [])
     setLoading(false)
   }
 
@@ -35,7 +39,9 @@ export default function VotePage() {
       .from('photos')
       .update({ votes: photo.votes + 1 })
       .eq('id', selected)
-    localStorage.setItem(VOTED_KEY, selected)
+    // Store the current poll ID so we know which poll was voted in
+    const pollRes = await supabase.from('settings').select('value').eq('key', 'poll_id').single()
+    localStorage.setItem(VOTED_KEY, pollRes.data?.value || '')
     setHasVoted(true)
     setSubmitting(false)
   }
@@ -51,7 +57,7 @@ export default function VotePage() {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Pick your favourite Freddie photo</h1>
+        <h1 className={styles.title}>Freddie's Photo Vote</h1>
         {!hasVoted && <p className={styles.sub}>Select a photo then submit your vote</p>}
       </header>
 

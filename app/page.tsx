@@ -116,22 +116,27 @@ export default function AdminPage() {
     }
   }
 
-
-
-async function startNewPoll() {
-  if (!confirm('Start a new poll? This will delete all current photos and votes. This cannot be undone.')) return
-  const paths = photos.map(p => {
-    const parts = p.url.split('/object/public/photos/')
-    return parts[1] || ''
-  }).filter(Boolean)
-  if (paths.length) await supabase.storage.from('photos').remove(paths)
-  for (const p of photos) {
-    const { error } = await supabase.from('photos').delete().eq('id', p.id)
-    if (error) console.error('Delete error:', error)
+  async function resetVotes() {
+    if (!confirm('Reset all votes to zero?')) return
+    await supabase.rpc('reset_all_votes')
+    fetchPhotos()
   }
-  localStorage.removeItem('photo_vote_cast')  // ← add this line
-  setPhotos([])
-}
+
+  async function startNewPoll() {
+    if (!confirm('Start a new poll? This will delete all current photos and votes. This cannot be undone.')) return
+    const paths = photos.map(p => {
+      const parts = p.url.split('/object/public/photos/')
+      return parts[1] || ''
+    }).filter(Boolean)
+    if (paths.length) await supabase.storage.from('photos').remove(paths)
+    for (const p of photos) {
+      await supabase.from('photos').delete().eq('id', p.id)
+    }
+    // Rotate the poll ID so all voters can vote again
+    const newPollId = crypto.randomUUID()
+    await supabase.from('settings').update({ value: newPollId }).eq('key', 'poll_id')
+    setPhotos([])
+  }
 
   function copyLink() {
     navigator.clipboard.writeText(voteUrl)
@@ -239,6 +244,9 @@ async function startNewPoll() {
 
         {photos.length > 0 && (
           <div className={styles.dangerRow}>
+            {photos.some(p => p.votes > 0) && (
+              <button className={styles.dangerBtn} onClick={resetVotes}>Reset votes</button>
+            )}
             <button className={`${styles.dangerBtn} ${styles.dangerBtnStrong}`} onClick={startNewPoll}>
               New poll — clear everything
             </button>
