@@ -39,7 +39,7 @@ export default function ResultsPage() {
       <header className={styles.header}>
         <div className={styles.headerInner}>
           <div>
-            <h1 className={styles.title}>Results</h1>
+            <h1 className={styles.title}>Freddie's Photo Vote</h1>
             <p className={styles.sub}>{totalVotes} vote{totalVotes !== 1 ? 's' : ''} — updates live</p>
           </div>
           <a href="/vote" className={styles.linkBtn}>Vote page</a>

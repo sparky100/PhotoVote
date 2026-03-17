@@ -116,11 +116,7 @@ export default function AdminPage() {
     }
   }
 
-  async function resetVotes() {
-    if (!confirm('Reset all votes to zero?')) return
-    await supabase.rpc('reset_all_votes')
-    fetchPhotos()
-  }
+
 
 async function startNewPoll() {
   if (!confirm('Start a new poll? This will delete all current photos and votes. This cannot be undone.')) return
@@ -243,9 +239,6 @@ async function startNewPoll() {
 
         {photos.length > 0 && (
           <div className={styles.dangerRow}>
-            {photos.some(p => p.votes > 0) && (
-              <button className={styles.dangerBtn} onClick={resetVotes}>Reset votes</button>
-            )}
             <button className={`${styles.dangerBtn} ${styles.dangerBtnStrong}`} onClick={startNewPoll}>
               New poll — clear everything
             </button>

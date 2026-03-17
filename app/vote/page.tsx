@@ -51,7 +51,7 @@ export default function VotePage() {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Pick your favourite</h1>
+        <h1 className={styles.title}>Pick your favourite Freddie photo</h1>
         {!hasVoted && <p className={styles.sub}>Select a photo then submit your vote</p>}
       </header>
 
