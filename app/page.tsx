@@ -133,6 +133,7 @@ async function startNewPoll() {
     const { error } = await supabase.from('photos').delete().eq('id', p.id)
     if (error) console.error('Delete error:', error)
   }
+  localStorage.removeItem('photo_vote_cast')  // ← add this line
   setPhotos([])
 }
 
