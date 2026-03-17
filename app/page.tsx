@@ -122,18 +122,19 @@ export default function AdminPage() {
     fetchPhotos()
   }
 
-  async function startNewPoll() {
-    if (!confirm('Start a new poll? This will delete all current photos and votes. This cannot be undone.')) return
-    // Delete files from storage
-    const paths = photos.map(p => {
-      const parts = p.url.split('/object/public/photos/')
-      return parts[1] || ''
-    }).filter(Boolean)
-    if (paths.length) await supabase.storage.from('photos').remove(paths)
-    // Delete all DB rows via RPC to bypass RLS
-    await supabase.rpc('delete_all_photos')
-    setPhotos([])
+async function startNewPoll() {
+  if (!confirm('Start a new poll? This will delete all current photos and votes. This cannot be undone.')) return
+  const paths = photos.map(p => {
+    const parts = p.url.split('/object/public/photos/')
+    return parts[1] || ''
+  }).filter(Boolean)
+  if (paths.length) await supabase.storage.from('photos').remove(paths)
+  for (const p of photos) {
+    const { error } = await supabase.from('photos').delete().eq('id', p.id)
+    if (error) console.error('Delete error:', error)
   }
+  setPhotos([])
+}
 
   function copyLink() {
     navigator.clipboard.writeText(voteUrl)
