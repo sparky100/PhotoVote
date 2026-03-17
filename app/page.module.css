@@ -1,0 +1,130 @@
+.page { min-height: 100vh; background: var(--bg3); }
+
+.header {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 10;
+}
+.headerInner {
+  max-width: 860px; margin: 0 auto; padding: 0 1.25rem;
+  height: 56px; display: flex; align-items: center; justify-content: space-between;
+}
+.title { font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.badge {
+  font-size: 11px; font-weight: 500; padding: 2px 8px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text2);
+}
+.headerActions { display: flex; gap: 8px; }
+.linkBtn {
+  font-size: 13px; padding: 6px 14px;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--text2); transition: background 0.15s;
+}
+.linkBtn:hover { background: var(--bg2); }
+
+.main { max-width: 860px; margin: 0 auto; padding: 1.5rem 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+
+.card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.25rem;
+}
+
+.sectionHeader { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1rem; }
+.sectionTitle { font-size: 15px; font-weight: 600; }
+.sectionHint { font-size: 12px; color: var(--text2); }
+
+.dropZone {
+  border: 1.5px dashed var(--border); border-radius: var(--radius);
+  padding: 2rem 1rem; text-align: center; cursor: pointer; transition: background 0.15s;
+}
+.dropZone:hover { background: var(--bg2); }
+.plusIcon { font-size: 28px; color: var(--text2); display: block; margin-bottom: 6px; }
+.dropText { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.dropSub { font-size: 13px; color: var(--text2); }
+
+.thumbGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px; margin-top: 1rem;
+}
+
+.thumbWrap {
+  position: relative; border-radius: var(--radius); overflow: hidden;
+  aspect-ratio: 1; background: var(--bg2); cursor: grab;
+  border: 2px solid transparent; transition: border-color 0.15s, opacity 0.15s;
+}
+.thumbWrap:hover .thumbActions { opacity: 1; }
+.thumbWrap:hover .dragHandle { opacity: 1; }
+.dragging { opacity: 0.4; }
+.dragOver { border-color: var(--accent) !important; }
+
+.thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Hover action buttons — top right */
+.thumbActions {
+  position: absolute; top: 6px; right: 6px;
+  display: flex; gap: 4px; opacity: 0; transition: opacity 0.15s;
+}
+.actionBtn {
+  background: rgba(0,0,0,0.55); color: #fff; border: none;
+  border-radius: 6px; width: 26px; height: 26px; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.15s; line-height: 1;
+}
+.actionBtn:hover { background: rgba(0,0,0,0.8); }
+.deleteBtn:hover { background: rgba(200,40,40,0.85) !important; }
+
+/* Drag handle — top left */
+.dragHandle {
+  position: absolute; top: 6px; left: 6px;
+  font-size: 16px; color: #fff;
+  background: rgba(0,0,0,0.45); border-radius: 4px;
+  width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.15s; cursor: grab; user-select: none;
+}
+
+/* Bottom name bar */
+.thumbBottom {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.6));
+  padding: 20px 8px 7px;
+}
+.thumbName {
+  font-size: 12px; color: #fff; display: block;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.renameInput {
+  width: 100%; font-size: 12px; padding: 3px 6px;
+  border: none; border-radius: 4px; outline: none;
+  background: rgba(255,255,255,0.9); color: #111;
+  font-family: inherit;
+}
+
+.empty { font-size: 14px; color: var(--text2); margin-top: 1rem; text-align: center; padding: 1.5rem 0; }
+
+.shareDesc { font-size: 14px; color: var(--text2); margin-bottom: 10px; }
+.shareRow { display: flex; gap: 8px; }
+.shareInput {
+  flex: 1; font-size: 13px; padding: 9px 12px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg2); color: var(--text2); outline: none; font-family: monospace;
+}
+.btn {
+  padding: 9px 18px; font-size: 14px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--bg);
+  color: var(--text); transition: background 0.15s; white-space: nowrap;
+}
+.btn:hover { background: var(--bg2); }
+
+.dangerRow { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.dangerBtn {
+  font-size: 13px; padding: 8px 16px; border-radius: var(--radius);
+  border: 1px solid #fca5a5; background: transparent;
+  color: #dc2626; transition: background 0.15s;
+}
+.dangerBtn:hover { background: #fef2f2; }
+.dangerBtnStrong {
+  border-color: #dc2626; background: #dc2626; color: #fff;
+}
+.dangerBtnStrong:hover { background: #b91c1c; }
